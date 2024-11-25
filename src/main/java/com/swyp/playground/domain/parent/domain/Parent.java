@@ -2,9 +2,7 @@ package com.swyp.playground.domain.parent.domain;
 
 import com.swyp.playground.domain.child.domain.Child;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -16,6 +14,8 @@ import java.util.List;
 @Table(name = "parent")
 @Getter
 @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Builder
 public class Parent {
 
