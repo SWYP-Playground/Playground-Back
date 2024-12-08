@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -95,13 +96,14 @@ public class ParentController {
 
 
     @GetMapping("/get-nickname")
-    public ResponseEntity<String> getNickname(@RequestParam String email){
-        try{
-            String nickname = parentService.getNicknameByEmail(email);
-            return ResponseEntity.ok(nickname);
-
-        }catch (IllegalArgumentException e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public String getNickname(@RequestParam String email) {
+        return parentService.getNicknameByEmail(email);
     }
+
+    @GetMapping("/users/{id}/manner-temp")
+    public ResponseEntity<BigDecimal> getParentMannerTemp(@PathVariable Long id) {
+        BigDecimal averageTemp = parentService.getParentMannerTemp(id);
+        return ResponseEntity.ok(averageTemp);
+    }
+
 }

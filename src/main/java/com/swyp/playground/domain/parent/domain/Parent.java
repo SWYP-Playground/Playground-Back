@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -68,6 +69,9 @@ public class Parent {
     @Column(name = "manner_temp", precision = 5, scale = 2, nullable = false)
     private BigDecimal mannerTemp;
 
+    @Column(name = "manner_temp_count", nullable = false)
+    private int mannerTempCount;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "find_friend_id")
     private FindFriend findFriend;
@@ -86,4 +90,11 @@ public class Parent {
             child.setParent(null);
         }
     }
+    public BigDecimal getAverageMannerTemp() {
+        if (mannerTempCount == 0) {
+            return BigDecimal.ZERO;
+        }
+        return mannerTemp.divide(BigDecimal.valueOf(mannerTempCount), 1, RoundingMode.HALF_UP);
+    }
+
 }
