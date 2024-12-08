@@ -12,18 +12,22 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.userdetails.User;
 
 import com.swyp.playground.domain.note.domain.Note;
 import com.swyp.playground.domain.note.dto.WriteNoteDto;
 import com.swyp.playground.common.redis.RedisService;
 
 import com.swyp.playground.domain.note.service.NoteService;
+
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 
 @RestController
@@ -37,8 +41,10 @@ public class NoteController {
 
     // -- GET --
     @GetMapping("/all")
-    public ResponseEntity<List<Note>> getAllNotes(@RequestHeader("Authorization") String token) {
-        return new ResponseEntity<List<Note>>(noteService.getAllNotes(), HttpStatus.OK);
+    @SecurityRequirement(name="bearerAuth")
+    public ResponseEntity<List<Note>> getAllNotes(@AuthenticationPrincipal User user) {
+        String email = user.getUsername();
+        return new ResponseEntity<List<Note>>(noteService.getAllNotes(email), HttpStatus.OK);
     }
 
     @GetMapping
@@ -48,6 +54,7 @@ public class NoteController {
 
     // -- POST --
     @PostMapping
+    @SecurityRequirement(name="bearerAuth")
     public ResponseEntity<Note> sendNote(@RequestBody WriteNoteDto writeNoteDto) {
         Note targetNote = new Note();
 
@@ -64,9 +71,14 @@ public class NoteController {
 
     // -- UPDATE --
     @PatchMapping
-    public ResponseEntity<String> updateNote(@RequestParam Long id, @RequestBody WriteNoteDto newNote) {
+    @SecurityRequirement(name="bearerAuth")
+    public ResponseEntity<String> updateNote(
+        @RequestParam Long id,
+        @RequestBody WriteNoteDto newNote,
+        @AuthenticationPrincipal User user) {
         try {
-            noteService.patchNoteById(id, newNote);
+            String email = user.getUsername();
+            noteService.patchNoteById(id, newNote, email);
         } catch (Exception e) {
             // 디버깅 처리
             System.err.println(e);
@@ -76,9 +88,11 @@ public class NoteController {
 
     // -- DELETE --
     @DeleteMapping
-    public ResponseEntity<String> deleteNote(@RequestParam Long id) {
+    @SecurityRequirement(name="bearerAuth")
+    public ResponseEntity<String> deleteNote(@RequestParam Long id, @AuthenticationPrincipal User user) {
+        String email = user.getUsername();
         try {
-            noteService.deleteNote(id);
+            noteService.deleteNote(id, email);
         } catch (Exception e) {
             // 디버깅 처리
             System.err.println(e);
