@@ -46,7 +46,7 @@ public class ReportController {
     public ResponseEntity<Report> addReport (@RequestBody AddReportDto addReportDto) {
         Report targetReport = new Report();
 
-        targetReport.setTargetId(addReportDto.getTargetId());
+        targetReport.setTargetNickname(addReportDto.getTargetNickname());
         targetReport.setCause(addReportDto.getCause());
         targetReport.setFindFriendId(addReportDto.getFindFriendId());
         targetReport.setWrittenBy(addReportDto.getWrittenBy());

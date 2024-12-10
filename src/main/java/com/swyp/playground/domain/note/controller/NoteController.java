@@ -52,7 +52,7 @@ public class NoteController {
         Note targetNote = new Note();
 
         targetNote.setNoteId(writeNoteDto.getNoteId());
-        targetNote.setTargetId(writeNoteDto.getTargetId());
+        targetNote.setTargetNickname(writeNoteDto.getTargetNickname());
         targetNote.setContent(writeNoteDto.getContent());
         targetNote.setWrittenBy(writeNoteDto.getWrittenBy());
         targetNote.setSentAt(getCurrentDateTime());

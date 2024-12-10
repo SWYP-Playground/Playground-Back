@@ -16,8 +16,8 @@ public class Note {
     @Column(name="NOTE_ID")
     private Long noteId;
 
-    @Column(name="TARGET_ID", nullable=false)
-    private String targetId;
+    @Column(name="TARGET_NICKNAME", nullable=false)
+    private String targetNickname;
 
     @Column(name="CONTENT", nullable=false)
     private String content;

@@ -18,7 +18,7 @@ public class Report {
     private Long reportId;
 
     @Column(nullable = false)
-    private Long targetId;
+    private String targetNickname;
 
     @Column(nullable = false)
     private Long findFriendId;

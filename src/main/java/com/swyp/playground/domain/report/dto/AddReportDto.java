@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class AddReportDto {
 
-    private Long targetId;
+    private String targetNickname;
 
     private Long findFriendId;
 

@@ -9,7 +9,7 @@ public class WriteNoteDto {
     
     private Long noteId;
 
-    private String targetId;
+    private String targetNickname;
 
     private String content;
 
