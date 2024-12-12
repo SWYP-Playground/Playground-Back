@@ -4,6 +4,11 @@ import com.swyp.playground.common.response.CommonResponse;
 import com.swyp.playground.domain.email.service.EmailService;
 import com.swyp.playground.domain.parent.domain.Parent;
 import com.swyp.playground.domain.parent.repository.ParentRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +28,25 @@ public class EmailController {
     private final PasswordEncoder passwordEncoder;
 
 
+    @Operation(
+            summary = "비밀번호 초기화",
+            description = "사용자가 이메일을 입력하면 새 비밀번호를 생성하여 이메일로 발송합니다."
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "비밀번호 초기화 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = CommonResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "등록되지 않은 이메일로 요청한 경우",
+                    content = @Content(mediaType = "application/json")
+            )
+    })
     @PostMapping("/reset-password")
     public ResponseEntity<CommonResponse> resetPassword(@RequestParam(value = "email") String email) throws Exception {
         System.out.println("이메일" + email);

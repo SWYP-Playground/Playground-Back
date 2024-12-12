@@ -33,16 +33,16 @@ public class LoginController {
         loginService.logout(token.substring(7));
         return ResponseEntity.ok().build();
     }
-    @GetMapping("/islogin")
-    public ResponseEntity<Map<String, String>> getUserInfo(@RequestHeader("Authorization") String token) {
-        String cleanToken = token.substring(7); // "Bearer " 제거
-        String email = tokenProvider.getEmailFromToken(cleanToken);
-        String nickname = tokenProvider.getNicknameFromToken(cleanToken);
-
-        Map<String, String> userInfo = Map.of(
-                "email", email,
-                "nickname", nickname
-        );
-        return ResponseEntity.ok(userInfo);
-    }
+//    @GetMapping("/islogin")
+//    public ResponseEntity<Map<String, String>> getUserInfo(@RequestHeader("Authorization") String token) {
+//        String cleanToken = token.substring(7); // "Bearer " 제거
+//        String email = tokenProvider.getEmailFromToken(cleanToken);
+//        String nickname = tokenProvider.getNicknameFromToken(cleanToken);
+//
+//        Map<String, String> userInfo = Map.of(
+//                "email", email,
+//                "nickname", nickname
+//        );
+//        return ResponseEntity.ok(userInfo);
+//    }
 }

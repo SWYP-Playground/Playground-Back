@@ -9,6 +9,10 @@ import com.swyp.playground.domain.parent.dto.req.ParentUpdateReqDto;
 import com.swyp.playground.domain.parent.dto.res.ParentCreateResDto;
 import com.swyp.playground.domain.parent.dto.res.ParentPasswordChangeResDto;
 import com.swyp.playground.domain.parent.service.ParentService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +24,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -92,7 +98,7 @@ public class ParentController {
     }
 
     @SecurityRequirement(name = "bearerAuth")
-    @PostMapping("/users/delete/{id}")
+    @DeleteMapping("/users/delete/{id}")
     public ResponseEntity<Void> deleteParent(@PathVariable Long id) {
         parentService.deleteParentById(id);
         return ResponseEntity.noContent().build();
@@ -100,15 +106,22 @@ public class ParentController {
 
 
     @GetMapping("/get-nickname")
-    public ResponseEntity<String> getNickname(@RequestParam String email){
-        try{
+    @Operation(summary = "사용자 닉네임 조회", description = "이메일을 이용해 사용자의 닉네임을 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "닉네임 조회 성공", content = @Content(schema = @Schema(example = "{\"nickname\": \"사용자 닉네임\"}")))
+    @ApiResponse(responseCode = "400", description = "닉네임 조회 실패", content = @Content(schema = @Schema(example = "{\"error\": \"해당 이메일을 가진 사용자가 존재하지 않습니다.\"}")))
+    public ResponseEntity<Map<String, String>> getNickname(@RequestParam String email) {
+        try {
             String nickname = parentService.getNicknameByEmail(email);
-            return ResponseEntity.ok(nickname);
-
-        }catch (IllegalArgumentException e){
-            return ResponseEntity.badRequest().body(e.getMessage());
+            Map<String, String> response = new HashMap<>();
+            response.put("nickname", nickname);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(errorResponse);
         }
     }
+
 
     @SecurityRequirement(name = "bearerAuth")
     @PostMapping("/password/{parentId}")
